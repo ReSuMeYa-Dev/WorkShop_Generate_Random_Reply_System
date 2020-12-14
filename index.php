@@ -24,12 +24,12 @@
                                             <div class="input-group">
                                                 <input type="text" class="form-control" placeholder="ทดลองสร้าง ที่สุ่มข้อความ" id="input_random_not_database">
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-outline-secondary" type="button" id="btn_random_not_database">สุ่มข้อมูล</button>
+                                                    <button class="btn btn-outline-secondary" type="button" onclick="Get_Not_Database()">สุ่มข้อมูล</button>
                                                 </div>
                                             </div>       
                                             <hr>
                                             <div class="text-center">
-                                                <button class="btn btn-sm btn-outline-success">แสดงข้อมูลจาก Database</button>
+                                                <button class="btn btn-sm btn-outline-success" onclick="Get_Database()">แสดงข้อมูลจาก Database</button>
                                             </div>                                    
                                         </div>
                                     </div>
@@ -57,4 +57,5 @@
     </body>
         <script src="assets/jquery/jquery.js"></script>
         <script src="assets/bootstrap/js/bootstrap.js"></script>
+        <script src="index.js"></script>
 </html>

@@ -20,20 +20,39 @@ while ($result_thank = $query_thank->fetch_object()) {
     $thank[] = $result_thank->thank_value;
 }
 
-$random_prefix = array_rand($prefix);
-$ramdom_name = array_rand($name);
-$ramdom_thank = array_rand($thank);
-
-// message
-$sql_message = "SELECT * FROM message";
-$query_message = $conn->query($sql_message);
-while ($result_message = $query_message->fetch_object()) {
-
-    $message = $result_message->message_value;
-
-    $message = str_replace("{prefix}", $prefix[$random_prefix], $message);
-    $message = str_replace("{name}", $name[$ramdom_name], $message);
-    $message = str_replace("{thank}", $thank[$ramdom_thank], $message);
-
-    echo $result_message->message_id.' => '.$message.'<br>';
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    // body
+    $data = json_decode(file_get_contents("php://input"));
+    if ($data->action == 'not_database') {
+        $message = $data->input_data;
+        $random_prefix = array_rand($prefix);
+        $ramdom_name = array_rand($name);
+        $ramdom_thank = array_rand($thank);
+        $message = str_replace("{prefix}", $prefix[$random_prefix], $message);
+        $message = str_replace("{name}", $name[$ramdom_name], $message);
+        $message = str_replace("{thank}", $thank[$ramdom_thank], $message);
+        $result = $message;
+        http_response_code(200);
+        echo json_encode(array('status' => 'success', 'message' => $result));
+    }else if ($data->action == 'database') {
+        // message
+        $sql_message = "SELECT * FROM message";
+        $query_message = $conn->query($sql_message);
+        while ($result_message = $query_message->fetch_object()) {
+            $message = $result_message->message_value;
+            $random_prefix = array_rand($prefix);
+            $ramdom_name = array_rand($name);
+            $ramdom_thank = array_rand($thank);
+            $message = str_replace("{prefix}", $prefix[$random_prefix], $message);
+            $message = str_replace("{name}", $name[$ramdom_name], $message);
+            $message = str_replace("{thank}", $thank[$ramdom_thank], $message);
+            $result[] = $message;
+        }
+        http_response_code(200);
+        echo json_encode(array('status' => 'success', 'message' => $result));
+    }else {
+        http_response_code(400);
+        echo json_encode(array('status' => 'error', 'message' => 'ไม่เข้าเงื่อนไข Action'));
+    }
 }
+
